@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Word</title>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Center Content */
+        .center {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Form Styles */
+        form {
+            padding: 20px;
+            display: inline-block;
+        }
+
+        /* Label Styles */
+        label {
+            font-weight: bold;
+        }
+
+        /* Input Styles */
+        input[type="text"],
+        input[type="submit"],
+        input[type="button"] {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        /* Text Input Styles */
+        input[type="text"] {
+            width: 150px;
+            color: #000;
+        }
+
+        /* Button Styles */
+        input[type="submit"],
+        input[type="button"] {
+            cursor: pointer;
+        }
+
+        /* Previous Guesses Styles */
+        .previous-guesses {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        /* Tries Remaining Styles */
+        .tries-remaining {
+            font-size: 18px;
+            float: right;
+            margin-right: 10px;
+        }
+
+        /* Horizontal Rule Styles */
+        hr {
+            border: 1px solid #ccc; /* Light border color */
+            margin: 20px 0; /* Space around the line */
+            width: 100%; /* Full width */
+        }
+    </style>
+    <script th:inline="javascript">
+        window.onload = function checkIfGameOver() {
+            var numberOfTriesRemaining = /*[[${triesLeft}]]*/ 0;
+
+            // Alert if no tries are left and disable input
+            if (numberOfTriesRemaining == 0) {
+                alert("Game over");
+                document.getElementById('guessedChar').disabled = true;
+                document.getElementById('try').disabled = true;
+            }
+        }
+
+        // Reload the game when called
+        function reloadGame() {
+            window.location.href = "http://localhost:8080/reload";
+        }
+    </script>
+</head>
+<body>
+    <div class="center">
+        <h1>Guess The Word</h1>
+        <h2 th:text="${wordToDisplay}">Show random word here</h2>
+        <h2 class="tries-remaining" th:text="'Tries Remaining : ' + ${triesLeft}">Show tries remaining</h2>
+        <h3 class="previous-guesses" th:each="word : ${rejectedAlphabetList}" th:text="'Previously wrong guessed alphabet: ' + ${word}">
+            Previously wrong guessed alphabet
+        </h3>
+    </div>
+    <hr>
+    <div class="center">
+        <form action="home" method="get">
+            <label>Guess the Char: </label>
+            <input type="text" name="guessedChar" id="guessedChar" maxlength="1">
+            <input type="submit" value="Try" id="try">
+            <input type="button" value="Restart" onclick="reloadGame();">
+        </form>
+    </div>
+</body>
+</html>
